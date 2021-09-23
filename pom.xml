@@ -1,0 +1,13 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.vaibhav</groupId>
+    <artifactId>assignment-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>assignment-parent</name>
+    <modules>
+        <module>service2</module>
+        <module>service1</module>
+        <module>interface-service</module>
+    </modules>
+    <packaging>pom</packaging>
+</project>

@@ -1,6 +1,7 @@
 # Compiled class file
 *.class
-
+*mvn*
+Data.xml
 # Log file
 *.log
 

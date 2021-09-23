@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package com.vaibhav.assignment;
+
+option java_multiple_files = true;
+option java_package = "com.vaibhav.assignment";
+
+service Service2{
+  rpc Store(FileRequest) returns (FileResponse){
+
+  }
+  rpc Update(FileRequest) returns (FileResponse){
+
+  }
+}
+
+message  FileRequest{
+  string FileData = 1;
+  string FileFormat = 2;
+}
+
+message  FileResponse{
+  string message=1;
+}
