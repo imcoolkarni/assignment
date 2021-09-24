@@ -1,0 +1,40 @@
+version: '3.7'
+services:
+    service1:
+      image: "vaibhav/service1:1.0"
+      container_name: service1
+      ports:
+        - "8080:8080"
+        - "9092:9092"
+      environment:
+        grpc.client.service1-grpc-server.address: service2:9091
+        grpc.client.service1-grpc-server.enableKeepAlive: "true"
+        grpc.client.service1-grpc-server.keepAliveWithoutCalls: "true"
+        grpc.client.service1-grpc-server.negotiationType: "plaintext"
+      volumes:
+        - type: volume
+          source: service1
+          target: /service1
+      networks:
+        - assignment
+      depends_on:
+        - service2
+    service2:
+        image: "vaibhav/service2:1.0"
+        container_name: "service2"
+        ports:
+          - "9091:9091"
+        volumes:
+         - type: volume
+           source: service2
+           target: /service2
+        networks:
+          - assignment
+
+networks:
+  assignment:
+    name: assignment
+
+volumes:
+  service1:
+  service2:

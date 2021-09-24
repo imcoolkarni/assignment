@@ -21,7 +21,6 @@ public class Service1controller {
     @PostMapping("/update")
     public String updateFile(@RequestParam("fileType") String fileType, @RequestBody String data) {
         return grpcClientService.UpdateFile(data, fileType);
-
     }
 
     @GetMapping("/read")
