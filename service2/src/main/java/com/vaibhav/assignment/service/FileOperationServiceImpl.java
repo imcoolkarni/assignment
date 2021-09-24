@@ -3,6 +3,7 @@ package com.vaibhav.assignment.service;
 
 import com.vaibhav.assignment.FileRequest;
 import com.vaibhav.assignment.FileResponse;
+import com.vaibhav.assignment.ReadRequest;
 import com.vaibhav.assignment.Service2Grpc;
 import com.vaibhav.assignment.core.FileOperation;
 import io.grpc.stub.StreamObserver;
@@ -10,6 +11,8 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
 
 @GrpcService
 public class FileOperationServiceImpl extends Service2Grpc.Service2ImplBase {
@@ -59,6 +62,26 @@ public class FileOperationServiceImpl extends Service2Grpc.Service2ImplBase {
 
         if (result.equals(""))
             result = "Error occurred during the operation";
+        FileResponse
+                greetingResponse = FileResponse.newBuilder()
+                .setMessage(result)
+                .build();
+
+        responseObserver.onNext(greetingResponse);
+        responseObserver.onCompleted();
+    }
+
+    @Override
+    public void readFile(ReadRequest request, StreamObserver<FileResponse> responseObserver) {
+        String Filetype = request.getFileFormat();
+        String result = null;
+        try {
+            result = fileOperation.readFile(Filetype);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (result.equals(""))
+            result = "File not found";
         FileResponse
                 greetingResponse = FileResponse.newBuilder()
                 .setMessage(result)

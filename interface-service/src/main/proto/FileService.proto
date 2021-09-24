@@ -12,6 +12,9 @@ service Service2{
   rpc Update(FileRequest) returns (FileResponse){
 
   }
+  rpc ReadFile(ReadRequest) returns (FileResponse){
+
+  }
 }
 
 message  FileRequest{
@@ -21,4 +24,8 @@ message  FileRequest{
 
 message  FileResponse{
   string message=1;
+}
+
+message ReadRequest{
+  string FileFormat=1;
 }

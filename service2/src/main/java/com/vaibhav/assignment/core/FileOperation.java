@@ -90,8 +90,12 @@ public class FileOperation {
             JSONObject json = new JSONObject(data);
             logger.info("JSON Data :" + json);
             String xml = XML.toString(json);
+            StringBuffer stringBuffer = new StringBuffer("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            stringBuffer.append(System.lineSeparator());
+            stringBuffer.append(xml);
+            stringBuffer.append(System.lineSeparator());
             FileWriter fileWriter = new FileWriter(XML_FILE);
-            fileWriter.write(xml);
+            fileWriter.write(stringBuffer.toString());
             fileWriter.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,5 +128,50 @@ public class FileOperation {
             return "Error occurred during update";
         }
         return "Update operation completed successfully";
+    }
+
+    public String readFile(String filetype) throws IOException {
+        File file = new File("Data" + "." + filetype.toLowerCase());
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            logger.error("Error occurred during reading file" + e.getMessage());
+            return e.getMessage();
+        }
+        String result = readFromInputStream(fileInputStream);
+        if (result.equals(""))
+            result = "No data present for requested file";
+        return result;
+    }
+
+    private String readFromInputStream(InputStream inputStream)
+            throws IOException {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        try (BufferedReader br
+                     = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                resultStringBuilder.append(line).append("\n");
+            }
+        }
+        return convertString(resultStringBuilder.toString());
+    }
+
+    private String convertString(String input) {
+        String string = input;
+        try {
+            // Convert from Unicode to UTF-8
+
+            byte[] utf8 = string.getBytes("UTF-8");
+
+            // Convert from UTF-8 to Unicode
+            string = new String(utf8, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error("error occurred during encoding");
+        }
+        return string;
+
     }
 }
