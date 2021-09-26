@@ -6,12 +6,15 @@ import com.vaibhav.assignment.FileResponse;
 import com.vaibhav.assignment.ReadRequest;
 import com.vaibhav.assignment.Service2Grpc;
 import com.vaibhav.assignment.core.FileOperation;
+import com.vaibhav.assignment.exception.IncorrectFileOperationException;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.IncompatibleConfigurationException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @GrpcService
@@ -21,6 +24,9 @@ public class FileOperationServiceImpl extends Service2Grpc.Service2ImplBase {
 
     @Autowired
     FileOperation fileOperation;
+
+    public FileOperationServiceImpl() {
+    }
 
     @Override
     public void store(FileRequest request, StreamObserver<FileResponse> responseObserver) {
@@ -34,8 +40,10 @@ public class FileOperationServiceImpl extends Service2Grpc.Service2ImplBase {
         } else if (fileType.equals("XML")) {
             result = fileOperation.StoreFileXML(data);
         }
-        if (result.equals(""))
+        if (result.equals("")) {
             result = "Error occurred during the operation";
+            responseObserver.onError(new IncorrectFileOperationException("Incorrect file operation"));
+        }
         FileResponse
                 greetingResponse = FileResponse.newBuilder()
                 .setMessage(result)
@@ -60,8 +68,10 @@ public class FileOperationServiceImpl extends Service2Grpc.Service2ImplBase {
             result = fileOperation.UpdateFileXML(data);
         }
 
-        if (result.equals(""))
+        if (result.equals("")) {
             result = "Error occurred during the operation";
+            responseObserver.onError(new IncompatibleConfigurationException("Incorrect file operation"));
+        }
         FileResponse
                 greetingResponse = FileResponse.newBuilder()
                 .setMessage(result)
@@ -78,10 +88,12 @@ public class FileOperationServiceImpl extends Service2Grpc.Service2ImplBase {
         try {
             result = fileOperation.readFile(Filetype);
         } catch (IOException e) {
-            e.printStackTrace();
+            responseObserver.onError(new FileNotFoundException());
+            logger.error("Error occurred: ", e.getMessage());
         }
-        if (result.equals(""))
-            result = "File not found";
+        if(result==null){
+            result="result not found";
+        }
         FileResponse
                 greetingResponse = FileResponse.newBuilder()
                 .setMessage(result)

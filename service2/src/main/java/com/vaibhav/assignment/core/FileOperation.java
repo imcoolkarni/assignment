@@ -133,13 +133,13 @@ public class FileOperation {
     public String readFile(String filetype) throws IOException {
         File file = new File("Data" + "." + filetype.toLowerCase());
         FileInputStream fileInputStream = null;
-        try {
+//        try {
             fileInputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            logger.error("Error occurred during reading file" + e.getMessage());
-            return e.getMessage();
-        }
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            logger.error("Error occurred during reading file" + e.getMessage());
+//            return e.getMessage();
+//        }
         String result = readFromInputStream(fileInputStream);
         if (result.equals(""))
             result = "No data present for requested file";
