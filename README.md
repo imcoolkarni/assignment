@@ -6,12 +6,13 @@ It consists of two services
 
 To generate the docker build checkout the code into your local environment and perform below actions
 
+Optional Steps
 1. checkout the code into IDE of your choice
 2. go to terminal/root directory of project
 3. run the maven build for the project
    `` mvn clean install -DskipTests=true ``
-```
 
+```
 cd service2
 docker build -t "vaibhav/service2:1.0" .
 cd ../service1
@@ -21,6 +22,17 @@ docker build -t "vaibhav/service1:1.0" .
 docker run -p 8080:8080 --name service1 -d vaibhav/service1:1.0
 
 docker run -p 9091:9091 --name service2 -d vaibhav/service2:1.0
+```
+
+Docker pull steps
+```
+docker pull escanor073/service2:1.0
+
+docker pull escanor073/service1:1.0
+
+docker run -p 8080:8080 --name service1 -d escanor073/service2:1.0
+
+docker run -p 9091:9091 --name service2 -d escanor073/service2:1.0
 ```
 
 The project supports docker-compose.  

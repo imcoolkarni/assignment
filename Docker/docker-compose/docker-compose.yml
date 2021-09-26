@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     service1:
-      image: "vaibhav/service1:1.0"
+      image: "escanor073/service1:1.0"
       container_name: service1
       ports:
         - "8080:8080"
@@ -20,7 +20,7 @@ services:
       depends_on:
         - service2
     service2:
-        image: "vaibhav/service2:1.0"
+        image: "escanor073/service2:1.0"
         container_name: "service2"
         ports:
           - "9091:9091"

@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @SpringJUnitConfig(classes = { MyServiceUnitTestConfiguration.class })
 @RunWith(SpringRunner.class)
+
 public class FileOperationServiceImplTest {
 
     public String data = "{\n" +
@@ -97,7 +98,7 @@ public class FileOperationServiceImplTest {
     }
 
     @Test
-    public void testUpdateOperation() throws Exception {
+    public void testUpdateOperationDataDoesNotExist() throws Exception {
         FileRequest request = FileRequest.newBuilder().setFileFormat(fileFormat).setFileData(data).build();
         StreamRecorder<FileResponse> responseObserver = StreamRecorder.create();
         fileOperationService.update(request, responseObserver);
@@ -113,6 +114,22 @@ public class FileOperationServiceImplTest {
                 .build(), fileResponse);
     }
 
+    @Test
+    public void testUpdateOperation() throws Exception {
+        FileRequest request = FileRequest.newBuilder().setFileFormat(fileFormat).setFileData(data).build();
+        StreamRecorder<FileResponse> responseObserver = StreamRecorder.create();
+        fileOperationService.update(request, responseObserver);
+        if (!responseObserver.awaitCompletion(5, TimeUnit.SECONDS)) {
+            fail("The call did not terminate in time");
+        }
+        assertNull(responseObserver.getError());
+        List<FileResponse> response = responseObserver.getValues();
+        assertEquals(1, response.size());
+        FileResponse fileResponse = response.get(0);
+        assertEquals(FileResponse.newBuilder()
+                .setMessage("Update operation completed successfully")
+                .build(), fileResponse);
+    }
     @Test
     public void testStoreOperationInvalidFiletype() throws Exception {
         FileRequest request = FileRequest.newBuilder().setFileFormat(invalidFileFormat).setFileData(data).build();
